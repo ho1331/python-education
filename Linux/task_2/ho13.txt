@@ -24,5 +24,5 @@
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
-0 */1 * * * chmod 755 $HOME/datetime.sh >> $HOME/dtime.txt 2>&1
+0 */1 * * * chmod 755 $HOME/script.sh >> $HOME/dtime.txt 2>&1
 0 7 */1 * * curl -o $HOME/whether.json "api.openweathermap.org/data/2.5/find?q=Kyiv&appid=932e368774141691e829f39acf5488ab" >>$HOME/whether.json 2>&1
