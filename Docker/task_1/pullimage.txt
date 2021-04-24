@@ -1,0 +1,5 @@
+# at 1-st login (on another place)
+
+# Должна быть латест версия иначе указываем тег
+$ docker pull ho13/firstimage:1.0.1
+$ docker run ho13/firstimage:1.0.1
