@@ -5,9 +5,13 @@ services:
         container_name: main_db
         env_file:
             - .env.dev
-
+        
+        volumes:
+            - db-data:/var/lib/postgresql/data
+            - ./brahatable.sql:/docker-entrypoint-initdb.d/brahatable.sql
         networks:
             - my-network
+        
     
     pgadmin:
         container_name: pgadmin_v1
