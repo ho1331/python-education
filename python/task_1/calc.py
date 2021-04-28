@@ -9,7 +9,7 @@ class Calculator:
     def __init__(self, num1, num2):
         """
         initializeted object
-        where num1, num1 are number of input
+        where num1, num2 are number of input
         """
         self.num1 = num1
         self.num2 = num2
