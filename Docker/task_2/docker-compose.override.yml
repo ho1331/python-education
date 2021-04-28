@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+    db:
+        container_name: main_db
+        env_file:
+            - .env.dev
+        
+        volumes:
+            - db-data:/var/lib/postgresql/data
+            - ./brahatable.sql:/docker-entrypoint-initdb.d/brahatable.sql
+        networks:
+            - my-network
+        
+    
+    pgadmin:
+        container_name: pgadmin_v1
+        env_file:
+            - .env.dev
+        
+        networks:
+            - my-network
+        
+        depends_on:
+            - db
+
+networks:
+  my-network:
+
+
+
