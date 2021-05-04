@@ -29,10 +29,6 @@ def draw(mistakes_else, canvas):
         hang = tk.PhotoImage(file="./images/0.png")
         canvas.create_image(400, 300, image=hang)
 
-    elif mistakes_else == 6:
-        hang = tk.PhotoImage(file="./images/1.png")
-        canvas.create_image(400, 300, image=hang)
-
     elif mistakes_else == 5:
         hang = tk.PhotoImage(file="./images/2.png")
         canvas.create_image(400, 300, image=hang)
@@ -68,6 +64,12 @@ def is_word_infile(words, messagebox, window):
     except Exception:
         messagebox.showinfo("Победа", "Все слова отгаданы")
         window.quit()
+
+
+def show_words(messagebox):
+    with open("used_words", "r") as uw:
+        words_used = uw.read()
+        messagebox.showinfo("Прошлые слова", words_used)
 
 
 # def check_letter(letter,secret_word,imshow_letter,var_imshow_letter,used_letters,mistakes_else,canvas):

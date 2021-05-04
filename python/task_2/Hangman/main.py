@@ -15,7 +15,22 @@ window.geometry(f"{WIDTH}x{HEIGHT}")
 canvas = tk.Canvas(window, width=600, height=800)
 canvas.pack()
 
-words = ["помидор", "сноуборд", "пианино", "афиша", "автобус", "пустыня"]
+words = [
+    "азарт",
+    "акула",
+    "автор",
+    "атака",
+    "башня",
+    "бетон",
+    "весна",
+    "виски",
+    "гараж",
+    "дятел",
+    "диван",
+    "жетон",
+    "жираф",
+    "зажим",
+]
 used_words = []
 
 
@@ -23,12 +38,12 @@ def start_game():
     var_imshow_letter = tk.StringVar()
     var_mistakes_else = tk.StringVar()
 
-    show_words = tk.Label(window, textvariable=var_imshow_letter)
-    show_words.config(font=("Courier", 28))
+    show_words = tk.Label(window, textvariable=var_imshow_letter, font="Courier 30")
     show_words.place(x=10, y=10)
 
-    show_info = tk.Label(window, textvariable=var_mistakes_else)
-    show_info.config(font=("Courier", 14))
+    show_info = tk.Label(
+        window, textvariable=var_mistakes_else, font="Courier 16", fg="red"
+    )
     show_info.place(x=10, y=HEIGHT - 100)
 
     secret_word = gf.is_word_infile(words, messagebox, window)
@@ -39,6 +54,8 @@ def start_game():
     var_imshow_letter.set("".join(imshow_letter))
     used_letters = []
     mistakes_else = 7
+
+    canvas.delete("all")
 
     def key_press(arg):
 
@@ -85,7 +102,11 @@ def start_game():
 menu = tk.Menu(window)
 window.config(menu=menu)
 menu.add_command(label="Начать", command=lambda: start_game())
-menu.add_command(label="Посмотреть прошлые слова")
+menu.add_command(
+    label="Посмотреть прошлые слова", command=lambda: gf.show_words(messagebox)
+)
 menu.add_command(label="Выйти", command=lambda: window.quit())
 
-window.mainloop()
+
+if __name__ == "__main__":
+    window.mainloop()
