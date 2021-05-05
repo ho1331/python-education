@@ -5,26 +5,19 @@ import re
 import tkinter as tk
 
 
-def update_screen(canvas, show_words, show_info):
-    """Update screen"""
-    for i in [show_words, show_info]:
-        i.destroy()
-        canvas.delete("all")
-
-
-def status(imshow_letter, canvas, show_words, show_info, mistakes_else, messagebox):
+def status(imshow_letter, canvas, window, mistakes_else, messagebox):
     """Monitores the gameplay
     if imshow_letter not empty - game continue"""
 
     if mistakes_else[0] == 0:
         messagebox.showinfo("О нет :(", "Вы проиграли")
-        update_screen(canvas, show_words, show_info)
+        update_screen(window, canvas)
 
     if "__ " in imshow_letter:
         return False
     else:
         messagebox.showinfo("Ура", "Вы выиграли")
-        update_screen(canvas, show_words, show_info)
+        update_screen(window, canvas)
 
     return True
 
@@ -114,3 +107,10 @@ def check_letter(
 
     else:
         messagebox.showinfo("Упс..", "Ввод некорректный, повторите попытку")
+
+
+def update_screen(window, canvas):
+    for widgets in window.winfo_children():
+        if isinstance(widgets, tk.Label):
+            widgets.destroy()
+    canvas.delete("all")

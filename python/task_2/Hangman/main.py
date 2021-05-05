@@ -10,31 +10,37 @@ HEIGHT, WIDTH = 600, 800
 window = tk.Tk()
 window.title("Hangman")
 window.geometry(f"{WIDTH}x{HEIGHT}")
+
 canvas = tk.Canvas(window, width=WIDTH, height=HEIGHT)
 canvas.pack()
 
 words = [
-    "азарт",
+    "ананас",
     "акула",
     "автор",
-    "атака",
+    "оса",
+    "мемориал",
     "башня",
     "бетон",
-    "весна",
+    "баскетбол",
+    "веревка",
     "виски",
+    "дерево",
     "гараж",
-    "дятел",
+    "демократия",
+    "пирамида",
     "диван",
     "жетон",
     "жираф",
     "зажим",
+    "колонизация",
 ]
 used_words = []
 
 
 def start_game():
     """Main function"""
-    window.update_idletasks()
+
     # environment variables
     var_imshow_letter = tk.StringVar()
     var_mistakes_else = tk.StringVar()
@@ -58,10 +64,8 @@ def start_game():
     mistakes_else = [7]
 
     var_mistakes_else.set(
-        f"Осталось попыток {mistakes_else[0]}, Неверно: {' '.join(used_letters)}"
+        f"Осталось попыток {mistakes_else[0]}, Неверно: {''.join(used_letters)}"
     )
-
-    canvas.delete("all")
 
     def key_press(arg):
         """
@@ -90,9 +94,7 @@ def start_game():
         )
 
         # Monitores the gameplay
-        gf.status(
-            imshow_letter, canvas, show_words, show_info, mistakes_else, messagebox
-        )
+        gf.status(imshow_letter, canvas, window, mistakes_else, messagebox)
 
     # write used_word to file
     gf.write_to_file(words, secret_word)
@@ -103,7 +105,9 @@ def start_game():
 # Create parts of menu
 menu = tk.Menu(window)
 window.config(menu=menu)
-menu.add_command(label="Начать", command=lambda: start_game())
+menu.add_command(
+    label="Начать", command=lambda: [gf.update_screen(window, canvas), start_game()]
+)
 menu.add_command(
     label="Посмотреть прошлые слова", command=lambda: gf.show_words(messagebox)
 )
