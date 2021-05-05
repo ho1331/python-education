@@ -1,18 +1,16 @@
-import random
-import re
+""" Hangman """
 import tkinter as tk
 from itertools import chain
 from tkinter import messagebox
 
 import game_func as gf
 
-# создаем оболочку окна
-
+# create a settings of window wrapper
 HEIGHT, WIDTH = 600, 800
 window = tk.Tk()
 window.title("Hangman")
 window.geometry(f"{WIDTH}x{HEIGHT}")
-canvas = tk.Canvas(window, width=600, height=800)
+canvas = tk.Canvas(window, width=WIDTH, height=HEIGHT)
 canvas.pack()
 
 words = [
@@ -35,11 +33,14 @@ used_words = []
 
 
 def start_game():
+    """Main function"""
+    window.update_idletasks()
+    # environment variables
     var_imshow_letter = tk.StringVar()
     var_mistakes_else = tk.StringVar()
 
     show_words = tk.Label(window, textvariable=var_imshow_letter, font="Courier 30")
-    show_words.place(x=10, y=10)
+    show_words.place(x=20, y=20)
 
     show_info = tk.Label(
         window, textvariable=var_mistakes_else, font="Courier 16", fg="red"
@@ -52,49 +53,50 @@ def start_game():
     imshow_letter = list(chain(secret_word[0], imshow_letter, secret_word[-1]))
 
     var_imshow_letter.set("".join(imshow_letter))
+
     used_letters = []
-    mistakes_else = 7
+    mistakes_else = [7]
+
+    var_mistakes_else.set(
+        f"Осталось попыток {mistakes_else[0]}, Неверно: {' '.join(used_letters)}"
+    )
 
     canvas.delete("all")
 
     def key_press(arg):
+        """
+        the function reads data from the keyboard,
+        processes it, and outputs the result.
+        Contains functions: check_letter(),status()
+        """
 
         letter = arg.char.lower()
         print(secret_word)
 
-        # gf.check_letter(letter,secret_word,imshow_letter,var_imshow_letter,used_letters,mistakes_else,canvas)
-        if (
-            len(letter) == 1
-            and letter.isalpha()
-            and bool(re.search("[\u0400-\u04FF]", letter))
-        ):
-            if letter in secret_word:
-                for pos, char in enumerate(secret_word):
-                    if char == letter:
-                        imshow_letter[pos] = letter
+        # Check input letter, processes the result of the check
+        gf.check_letter(
+            letter,
+            secret_word,
+            imshow_letter,
+            var_imshow_letter,
+            used_letters,
+            mistakes_else,
+            canvas,
+            messagebox,
+        )
 
-                var_imshow_letter.set("".join(imshow_letter))
-            else:
-                nonlocal mistakes_else
-                mistakes_else -= 1
+        var_mistakes_else.set(
+            f"Осталось попыток {mistakes_else[0]}, Неверно: {' '.join(used_letters)}"
+        )
 
-                if letter not in used_letters:
-                    used_letters.append(letter)
-
-                gf.draw(mistakes_else, canvas)
-
-        else:
-            print("Ввод некорректный, повторите попытку")
-
+        # Monitores the gameplay
         gf.status(
             imshow_letter, canvas, show_words, show_info, mistakes_else, messagebox
         )
 
-        var_mistakes_else.set(
-            f"Осталось попыток {mistakes_else}, Неверно: {' '.join(used_letters)}"
-        )
-
+    # write used_word to file
     gf.write_to_file(words, secret_word)
+    # binds keyboard events to key_press агтс
     window.bind("<KeyPress>", key_press)
 
 
