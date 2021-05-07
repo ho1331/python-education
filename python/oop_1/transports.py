@@ -185,7 +185,7 @@ class Acoustic(Tuning):
     @classmethod
     def counter(cls):
         """show count of obj"""
-        print(f"You created {Acoustic.__counter} objects")
+        print(f"You created {cls.__counter} objects")
 
     @staticmethod
     def much_price(price):
