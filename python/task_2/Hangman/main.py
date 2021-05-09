@@ -1,9 +1,8 @@
 """ Hangman """
 import tkinter as tk
-from itertools import chain
 from tkinter import messagebox
 
-import game_func as gf
+from hangman import Hangman, shows_words, update
 
 # create a settings of window wrapper
 HEIGHT, WIDTH = 600, 800
@@ -35,37 +34,16 @@ words = [
     "зажим",
     "колонизация",
 ]
-used_words = []
 
 
 def start_game():
     """Main function"""
 
-    # environment variables
-    var_imshow_letter = tk.StringVar()
-    var_mistakes_else = tk.StringVar()
-
-    show_words = tk.Label(window, textvariable=var_imshow_letter, font="Courier 30")
-    show_words.place(x=20, y=20)
-
-    show_info = tk.Label(
-        window, textvariable=var_mistakes_else, font="Courier 16", fg="red"
-    )
-    show_info.place(x=10, y=HEIGHT - 100)
-
-    secret_word = gf.is_word_infile(words, messagebox, window)
-
-    imshow_letter = ["__ "] * (len(secret_word) - 2)
-    imshow_letter = list(chain(secret_word[0], imshow_letter, secret_word[-1]))
-
-    var_imshow_letter.set("".join(imshow_letter))
-
-    used_letters = []
-    mistakes_else = [7]
-
-    var_mistakes_else.set(
-        f"Осталось попыток {mistakes_else[0]}, Неверно: {''.join(used_letters)}"
-    )
+    try:
+        hangman = Hangman(window, HEIGHT, words)
+    except Exception:
+        messagebox.showinfo("Победа", "Все слова отгаданы")
+        window.quit()
 
     def key_press(arg):
         """
@@ -75,29 +53,16 @@ def start_game():
         """
 
         letter = arg.char.lower()
-        print(secret_word)
+        print(hangman.secret_word)
 
         # Check input letter, processes the result of the check
-        gf.check_letter(
-            letter,
-            secret_word,
-            imshow_letter,
-            var_imshow_letter,
-            used_letters,
-            mistakes_else,
-            canvas,
-            messagebox,
-        )
-
-        var_mistakes_else.set(
-            f"Осталось попыток {mistakes_else[0]}, Неверно: {' '.join(used_letters)}"
-        )
+        hangman.check_letter(letter, canvas)
 
         # Monitores the gameplay
-        gf.status(imshow_letter, canvas, window, mistakes_else, messagebox)
+        hangman.status(canvas)
 
     # write used_word to file
-    gf.write_to_file(words, secret_word)
+    hangman.write_to_file()
     # binds keyboard events to key_press агтс
     window.bind("<KeyPress>", key_press)
 
@@ -105,12 +70,8 @@ def start_game():
 # Create parts of menu
 menu = tk.Menu(window)
 window.config(menu=menu)
-menu.add_command(
-    label="Начать", command=lambda: [gf.update_screen(window, canvas), start_game()]
-)
-menu.add_command(
-    label="Посмотреть прошлые слова", command=lambda: gf.show_words(messagebox)
-)
+menu.add_command(label="Начать", command=lambda: [update(window, canvas), start_game()])
+menu.add_command(label="Посмотреть прошлые слова", command=lambda: shows_words())
 menu.add_command(label="Выйти", command=lambda: window.quit())
 
 
