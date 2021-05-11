@@ -50,13 +50,15 @@ class Staff:
 
 
 class Managmant(Staff):
-    def __init__(self):
+    def __init__(self, name):
         self.name = name
 
 
 class ServiceStaff(Staff):
-    def __init__(self):
+    def __init__(self, name):
         self.name = name
+        # oblect Restaurant
+        Restaurant.staff += 1
 
 
 class Accountent(Managmant):
@@ -106,7 +108,7 @@ class Cook(ServiceStaff):
 
 
 class Waiter(ServiceStaff):
-    salary = 0
+    salary = 4200
 
     def pay_off(self):
         pass
@@ -139,10 +141,11 @@ class Customer:
         return Customer.__count
 
     def is_delivery(self):
-        pass
+        if len(self.adress) > 0:
+            return True
 
     def pay_off(self):
-        pass
+        return self.order.choise[1]
 
     def get_order(self):
         my_choise = self.order.cust_order
@@ -175,5 +178,6 @@ restaurant = Restaurant()
 menu = restaurant.menu
 # Customer
 cust1 = Customer("John")
-# выбор блюда
+# заказ
 order = cust1.get_order()
+pay = cust1.pay_off()
