@@ -8,9 +8,9 @@ class Restaurant:
     menu = {"Цезарь": 120, "Оливье": 80}
 
     def __init__(self):
-        self.staff = 0
-        self.hall = Hall().check_ftable()
-        self.customer = {}
+        self.staff = {}
+        self.hall = Hall()
+        self.customer = 0
         self.worktime = datetime.now().hour
 
     def refresh_budget(self):
@@ -24,25 +24,37 @@ class Restaurant:
             Restaurant.__isOpen = False
         return Restaurant.__isOpen
 
-    def table_free(self):
-        pass
+    def table_free(self, customer):
+        """counts visitors and displays the number of free tables"""
+        self.customer += customer
+        self.hall.ftable = self.customer
+        free = self.hall.ftable
+        if free > 0:
+            return self.hall.ftable
 
 
 class Hall:
     __freeTables = 60
 
-    def check_ftable(self):
-        pass
+    @property
+    def ftable(self):
+        return Hall.__freeTables
+
+    @ftable.setter
+    def ftable(self, customer):
+        Hall.__freeTables -= customer
 
 
 class Staff:
-    _staff = {}
+    _staff = {"Waiter": 0, "Barman": 0, "Cook": 0, "Accountent": 0}
     income = 0
     outcome = 0
 
-    @abstractmethod
-    def __init__(self):
-        raise NotImplementedError("Необходимо переопределить метод")
+    def __init__(self, name):
+        self.name = name
+        for i in Staff._staff.keys():
+            if self.__class__.__name__ == i:
+                Staff._staff[i] += 1
 
     @abstractmethod
     def get_salary(self):
@@ -50,15 +62,15 @@ class Staff:
 
 
 class Managmant(Staff):
-    def __init__(self, name):
-        self.name = name
+    @abstractmethod
+    def special(self):
+        raise NotImplementedError("Необходимо переопределить метод")
 
 
 class ServiceStaff(Staff):
-    def __init__(self, name):
-        self.name = name
-        # oblect Restaurant
-        Restaurant.staff += 1
+    @abstractmethod
+    def special(self):
+        raise NotImplementedError("Необходимо переопределить метод")
 
 
 class Accountent(Managmant):
@@ -72,10 +84,10 @@ class Accountent(Managmant):
 
 
 class Barman(ServiceStaff):
-    salary = 0
+    salary = 4800
 
-    def pay_off(self):
-        pass
+    def pay_off(self, pay):
+        Staff.income += pay
 
     def __getproduct(self):
         pass
@@ -91,7 +103,7 @@ class Barman(ServiceStaff):
 
 
 class Cook(ServiceStaff):
-    salary = 0
+    salary = 5600
     _ingridients = {}
 
     def __getproduct(self):
@@ -110,8 +122,8 @@ class Cook(ServiceStaff):
 class Waiter(ServiceStaff):
     salary = 4200
 
-    def pay_off(self):
-        pass
+    def pay_off(self, pay):
+        Staff.income += pay
 
     def get_order(self):
         pass
@@ -121,10 +133,25 @@ class Waiter(ServiceStaff):
 
 
 class Store:
-    product = {}
+    _product = {
+        "яйцо": 100,
+        "масло": 50,
+        "колбаса": 35,
+        "хлеб": 150,
+        "майонез": 60,
+        "горошек": 44,
+        "салат": 156,
+        "маслины": 65,
+        "огурец": 80,
+        "мясо": 90,
+        "виски": 30,
+    }
 
-    def check_product(self):
-        pass
+    def check_product(self, needs):
+        store = Store._product
+        for key, value in needs.items():
+            if key in store and store[key] > value:
+                return True
 
 
 class Customer:
@@ -174,10 +201,35 @@ class Order:
 restaurant = Restaurant()
 # открыт ли ресторан
 # print(restaurant.check_isOpen)
+
 # меню
 menu = restaurant.menu
 # Customer
 cust1 = Customer("John")
+cust2 = Customer("Brody")
+cust3 = Customer("Johny")
+cust4 = Customer("Finn")
+count_cust = cust4.get_count
+
+# проверка есть ли свободные столы
+is_freeTable = restaurant.table_free(count_cust)
+
 # заказ
-order = cust1.get_order()
-pay = cust1.pay_off()
+order1 = cust1.get_order()
+order2 = cust2.get_order()
+pay1 = cust1.pay_off()
+pay2 = cust2.pay_off()
+
+
+# Personal
+waiter1 = Waiter("Reychal")
+waiter2 = Waiter("Mimi")
+barman1 = Barman("Oleg")
+cook1 = Cook("Grisha")
+accountent1 = Accountent("Tamara")
+print(Staff._staff)
+
+# внести кассу
+waiter1.pay_off(pay1)
+waiter1.pay_off(pay2)
+print(Staff.income)
