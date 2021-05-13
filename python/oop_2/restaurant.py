@@ -1,11 +1,12 @@
 from abc import abstractmethod
 from datetime import datetime
+from typing import OrderedDict
 
 
 class Restaurant:
-    _budget = 0
+    _budget = 100000
     __isOpen = None
-    menu = {"Цезарь": 120, "Оливье": 80}
+    menu = {"Цезарь": 120, "Оливье": 80, "Виски": 100}
 
     def __init__(self):
         self.staff = {}
@@ -74,7 +75,7 @@ class ServiceStaff(Staff):
 
 
 class Accountent(Managmant):
-    salary = 0
+    salary = 6000
 
     def __getBudget(self):
         pass
@@ -85,38 +86,68 @@ class Accountent(Managmant):
 
 class Barman(ServiceStaff):
     salary = 4800
+    waste = 0
+
+    def __init__(self, name):
+        super().__init__(name)
+        self.order = None
+        self.store = Store()
 
     def pay_off(self, pay):
         Staff.income += pay
 
     def __getproduct(self):
-        pass
+        order = self.order
+        if order in self.store._product:
+            Barman.waste += self.store.check_drinks(order)
+            return True
+        return False
 
-    def get_order(self):
-        pass
+    def get_order(self, outstanding):
+        self.order = outstanding.lower()
+        return outstanding
 
     def bring_order(self):
-        pass
-
-    def makedrink(self):
-        pass
+        return Barman.__getproduct(self)
 
 
 class Cook(ServiceStaff):
+    waste = 0
     salary = 5600
-    _ingridients = {}
+    _ingridients = {
+        "Оливье": ("яйцо", "колбаса", "майонез", "горошек", "огурец"),
+        "Цезарь": ("хлеб", "салат", "яйцо", "маслины", "мясо"),
+    }
+
+    def __init__(self, name):
+        super().__init__(name)
+        self.order = None
+        self.store = Store()
+
+    def to_cook(self, outstanding):
+        self.order = outstanding
+        return outstanding
+
+    @property
+    def _get_order(self):
+        return Cook._ingridients
+
+    @_get_order.setter
+    def _get_order(self, ingridients):
+        Cook._ingridients = ingridients
 
     def __getproduct(self):
-        pass
-
-    def get_order(self):
-        pass
-
-    def to_cook(self):
-        pass
+        order = self.order
+        ingridients = self._get_order
+        if order in ingridients:
+            # take a product
+            meel = ingridients.get(order)
+            Cook.waste += self.store.check_product(meel)
+            return True
+        return False
 
     def bring_order(self):
-        pass
+        return Cook.__getproduct(self)
 
 
 class Waiter(ServiceStaff):
@@ -125,11 +156,11 @@ class Waiter(ServiceStaff):
     def pay_off(self, pay):
         Staff.income += pay
 
-    def get_order(self):
-        pass
+    def get_order(self, order):
+        return list(order)[0]
 
-    def bring_order(self):
-        pass
+    def bring_order(self, cust):
+        print(f"Thanks for your order {cust.name}")
 
 
 class Store:
@@ -147,11 +178,23 @@ class Store:
         "виски": 30,
     }
 
-    def check_product(self, needs):
+    def check_product(self, meel):
         store = Store._product
-        for key, value in needs.items():
-            if key in store and store[key] > value:
-                return True
+        cost = 0
+        for i in meel:
+            for key, value in store.items():
+                if i == key:
+                    value -= 1
+                    cost += 70
+        return cost
+
+    def check_drinks(self, drink):
+        store = Store._product
+        cost = 0
+        for i in store:
+            if i == drink:
+                cost += 100
+        return cost
 
 
 class Customer:
@@ -217,6 +260,7 @@ is_freeTable = restaurant.table_free(count_cust)
 # заказ
 order1 = cust1.get_order()
 order2 = cust2.get_order()
+
 pay1 = cust1.pay_off()
 pay2 = cust2.pay_off()
 
@@ -227,9 +271,20 @@ waiter2 = Waiter("Mimi")
 barman1 = Barman("Oleg")
 cook1 = Cook("Grisha")
 accountent1 = Accountent("Tamara")
-print(Staff._staff)
+# print(Staff._staff)
 
 # внести кассу
 waiter1.pay_off(pay1)
-waiter1.pay_off(pay2)
-print(Staff.income)
+waiter2.pay_off(pay2)
+# print(Staff.income)
+
+# выполнение заказа
+outstanding = waiter1.get_order(order1)
+outstanding2 = waiter2.get_order(order2)
+print(outstanding)
+tocook = cook1.to_cook(outstanding)
+isOrderisDone = cook1.bring_order()
+print(cook1.waste)
+drink_order = barman1.get_order(outstanding2)
+isOrderisDone_2 = barman1.bring_order()
+print(barman1.waste)
