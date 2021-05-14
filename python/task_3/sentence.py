@@ -27,8 +27,8 @@ class Sentence:
 
     def __init__(self, text: str):
         if isinstance(text, str) and text[-1] in ["?", ".", "!"]:
-            self.text = [i for i in re.findall(r"[^\d\s.,!?/(-/)=*&^%$#@~`;:]+", text)]
-            self.chars = [i for i in re.findall(r"[\d.,!?/(-/)=*&^%$#@~`;:]", text)]
+            self.text = [i for i in re.findall(r"[^\d\W]+", text)]
+            self.chars = [i for i in re.findall(r"[\d\W]", text)]
         elif not isinstance(text, str):
             raise TypeError("U must type a string")
         else:
@@ -59,5 +59,6 @@ class Sentence:
         return [i for i in self.chars]
 
 
-obj1 = Sentence("Не пом-ню, - и :;не (2люблю fuckkkkkkkk!!!!!!")
+obj1 = Sentence("Не пом-ню, - и :;не (2люблю fuckkkkkkkk!)!!!!!")
 print(obj1[:])
+print(obj1.other_chars)
