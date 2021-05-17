@@ -32,7 +32,7 @@ class Sentence:
         elif not isinstance(text, str):
             raise TypeError("U must type a string")
         else:
-            raise ValueError
+            raise ValueError("U must finished your sentence like (.!?)")
 
     def __repr__(self):
         return f"<Sentence(words={len(self.text)}, other_chars={len(self.chars)})>"
@@ -50,13 +50,13 @@ class Sentence:
 
     @property
     def words(self):
-        "return words generators"
+        """return list of words"""
         return self._words()
 
     @property
     def other_chars(self):
-        "return chars generators"
-        return [i for i in self.chars]
+        """return list of chars"""
+        return self.chars
 
 
 obj1 = Sentence("Не пом-ню, - и :;не (2люблю fuckkkkkkkk!)!!!!!")
