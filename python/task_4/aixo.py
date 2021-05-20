@@ -2,7 +2,7 @@
 import logging
 import os
 import sys
-from copy import deepcopy
+from copy import copy, deepcopy
 
 
 class Menu:
@@ -70,8 +70,8 @@ class XO:
         self.place = list(range(9))
         # create menu
         self.menu = Menu()
-        self.AI = "X"
-        self.PLAYER = "O"
+        self.AI = "O"
+        self.PLAYER = "X"
 
     def key_event(self):
         """check path of menu"""
@@ -112,14 +112,14 @@ class XO:
         curplace = place
         # win combinations
         combinates = (
+            (2, 4, 6),  # diagonal
+            (0, 4, 8),  # diagonal
+            (1, 4, 7),
             (0, 1, 2),
             (3, 4, 5),
             (6, 7, 8),
             (0, 3, 6),
-            (1, 4, 7),
             (2, 5, 8),
-            (0, 4, 8),
-            (2, 4, 6),
         )
         # if tuple of combinations are same - player will win
         for i in combinates:
@@ -135,36 +135,55 @@ class XO:
         isfree = [i for i in place if i not in [self.AI, self.PLAYER]]
         return isfree
 
-    def minimax(self, place, player):
-        testplace = deepcopy(self.place)
+    def minimax(self, gameplace, player):
+        place = gameplace
         # Empty index
-        freestep = self.freecolumn(testplace)
+        freestep = self.freecolumn(place)
 
         # Check win
-        winner = self.check_win(testplace)
+        winner = self.check_win(place)
         if winner == self.AI:
             return 10
         if winner == self.PLAYER:
             return -10
 
         # push score for each index
+
         if player == self.AI:
             score = -500
             for i in freestep:
-                testplace[i] = player
-                mass = self.minimax(testplace, self.PLAYER)
+                place[i] = player
+                mass = self.minimax(place, self.PLAYER)
+                place[i] = i
                 score = max(score, mass)
 
         else:
             score = 500
             for i in freestep:
-                testplace[i] = player
-                mass = self.minimax(testplace, self.AI)
+                place[i] = player
+                mass = self.minimax(place, self.AI)
+                place[i] = i
                 score = min(score, mass)
 
         return score
 
+    def ai_moving(self, place):
+        move = None
+        best_score = -500
+        testplace = place
+        freestep = self.freecolumn(testplace)
+        for i in freestep:
+            testplace[i] = self.AI
+            mass = self.minimax(testplace, self.PLAYER)
+            testplace[i] = i
+            if mass > best_score:
+                best_score = mass
+                move = i
+
+        return move
+
     #####################################
+
     def newgame(self):
         """start game"""
         if self.place != list(range(9)):
@@ -191,25 +210,22 @@ class XO:
         while True:
             self.draw()
             if counter % 2 == 0:
-                print(f"{self.gamer.name1} ходит")
-                self.take_input(self.AI)  # X =playertype
-                ##########################
-                # call recurssion
-                f = self.minimax(self.place, self.AI)
-                print(f)
-                ##########################
-
-            else:
                 print(f"{self.gamer.name2} ходит")
-                self.take_input(self.PLAYER)
+                ####################
+                move = self.ai_moving(self.place)
+                self.place[move] = self.AI
+                ####################
+            else:
+                print(f"{self.gamer.name1} ходит")
+                self.take_input(self.PLAYER)  # X =playertype
             counter += 1
 
             if counter > 4:
                 winner = self.check_win(self.place)
                 if winner:
                     playerwin = {
-                        winner == self.AI: self.gamer.name1,
-                        winner == self.PLAYER: self.gamer.name2,
+                        winner == self.AI: self.gamer.name2,
+                        winner == self.PLAYER: self.gamer.name1,
                     }[True]
                     print(f"{playerwin} победил!!!!!")
                     self.gamer.log_win(playerwin)
