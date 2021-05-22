@@ -1,54 +1,21 @@
-# from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 from tests.testfiles import codetotest as code
 
-# @pytest.fixture
-# def empty_wallet():
-#     """Returns a Wallet instance with a zero balance"""
-#     return Wallet()
+# import pkgutil
 
-
-# @pytest.mark.parametrize(
-#     "earned,spent,expected",
-#     [
-#         (30, 10, 20),
-#         (20, 2, 18),
-#     ],
-# )
-# def test_transactions(earned, spent, expected):
-#     my_wallet = Wallet()
-#     my_wallet.add_cash(earned)
-#     my_wallet.spend_cash(spent)
-#     assert my_wallet.balance == expected
-
-
-# def capital_case(x):
-#     if not isinstance(x, str):
-#         raise TypeError("Please provide a string argument")
-#     return x.capitalize()
-
-
-# def test_capital_case():
-#     assert capital_case("semaphore") == "Semaphore"
-
-
-# def test_raises_exception_on_non_string_arguments():
-#     with pytest.raises(TypeError):
-#         capital_case(9)
-
-# m = Mock()
-# m()
-# m()
-# m()
-# print(m.call_count)
+# search_path = [
+#     "."
+# ]  # Используйте None, чтобы увидеть все модули, импортируемые из sys.path
+# all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
+# print(all_modules)
 
 # test even_odd()
 def test_even_odd():
     assert code.even_odd(4) == "even"
     assert code.even_odd(5) == "odd"
-
-
+# -----------------------------------------------------------------------------------------
 # test sum_all()
 @pytest.mark.parametrize(
     "args",
@@ -60,3 +27,25 @@ def test_even_odd():
 )
 def test_sun_all(args):
     assert code.sum_all(*args) == sum(args)
+# -----------------------------------------------------------------------------------------
+
+# test class Product
+@pytest.fixture
+def obj_product():
+    return code.Product("apple", 20)
+
+
+def test_subtract_quantity(obj_product):
+    obj_product.subtract_quantity()
+    assert obj_product.quantity >= 0
+
+
+def test_add_quantity(obj_product):
+    obj_product.add_quantity()
+    assert obj_product.quantity > 0
+
+
+def test_change_price(obj_product):
+    price = obj_product.price
+    obj_product.change_price(20.4)
+    assert (obj_product.price > price) and (type(obj_product.price) == float)
