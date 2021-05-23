@@ -56,7 +56,11 @@ def obj_shop():
 
 def test_init(obj_product, obj_shop):
     assert obj_shop.products == []
+    # more 1 product
     assert code.Shop([obj_product, obj_product]).products == [obj_product, obj_product]
+    # one product
+    one_product = code.Product('onion',10)
+    assert code.Shop(one_product).products == [one_product]
 
 
 def test_add_product(obj_product, obj_shop):
