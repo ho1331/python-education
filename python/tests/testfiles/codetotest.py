@@ -156,3 +156,4 @@ class Shop:
                     self.products[product_index].subtract_quantity(qty_to_sell)
                 self.money += receipt
             return receipt
+            

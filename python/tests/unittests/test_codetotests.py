@@ -1,20 +1,13 @@
-from unittest.mock import Mock, patch
-
 import pytest
 from tests.testfiles import codetotest as code
 
-# import pkgutil
-
-# search_path = [
-#     "."
-# ]  # Используйте None, чтобы увидеть все модули, импортируемые из sys.path
-# all_modules = [x[1] for x in pkgutil.iter_modules(path=search_path)]
-# print(all_modules)
 
 # test even_odd()
 def test_even_odd():
     assert code.even_odd(4) == "even"
     assert code.even_odd(5) == "odd"
+
+
 # -----------------------------------------------------------------------------------------
 # test sum_all()
 @pytest.mark.parametrize(
@@ -27,20 +20,23 @@ def test_even_odd():
 )
 def test_sun_all(args):
     assert code.sum_all(*args) == sum(args)
+
+
 # -----------------------------------------------------------------------------------------
 
 # test class Product
 @pytest.fixture
 def obj_product():
-    return code.Product("apple", 20)
+    return code.Product("apple", 20, 4)
 
 
 def test_subtract_quantity(obj_product):
-    obj_product.subtract_quantity()
+    obj_product.subtract_quantity(4)
     assert obj_product.quantity >= 0
 
 
 def test_add_quantity(obj_product):
+    obj_product.quantity = 0
     obj_product.add_quantity()
     assert obj_product.quantity > 0
 
@@ -49,3 +45,65 @@ def test_change_price(obj_product):
     price = obj_product.price
     obj_product.change_price(20.4)
     assert (obj_product.price > price) and (type(obj_product.price) == float)
+
+
+# -----------------------------------------------------------------------------------------
+# test class Shop
+@pytest.fixture
+def obj_shop():
+    return code.Shop()
+
+
+def test_init(obj_product, obj_shop):
+    assert obj_shop.products == []
+    assert code.Shop([obj_product, obj_product]).products == [obj_product, obj_product]
+
+
+def test_add_product(obj_product, obj_shop):
+    obj_shop.add_product(obj_product)
+    assert obj_product in obj_shop.products
+
+
+def test_get_product_index(obj_product, obj_shop):
+    assert obj_shop._get_product_index(obj_product.title) == None
+    obj_shop.add_product(obj_product)
+    assert obj_shop._get_product_index(obj_product.title) == obj_shop.products.index(
+        obj_product
+    )
+
+
+@pytest.fixture
+def zero_product():
+    return code.Product("banana", 30, 0)
+
+
+def test_sell_product(obj_product, zero_product):
+
+    # if count of product < qty_to_sell
+    shop_obj = code.Shop([zero_product, obj_product])
+    with pytest.raises(ValueError):
+        shop_obj.sell_product(zero_product.title)
+
+    # if count of product > qty_to_sell
+    shop_obj.sell_product(obj_product.title, 1)
+    assert obj_product.quantity == 3
+
+    # if count of product == qty_to_sell
+    shop_obj.sell_product(obj_product.title, 3)
+    assert obj_product not in shop_obj.products
+
+    # check money
+    assert shop_obj.money == float(80)
+
+
+# collected 11 items
+
+# unittests/test_codetotests.py ...........                                                                                                                                                     [100%]
+
+# ----------- coverage: platform linux, python 3.8.5-final-0 -----------
+# Name                            Stmts   Miss  Cover
+# ---------------------------------------------------
+# unittests/__init__.py               0      0   100%
+# unittests/test_codetotests.py      47      0   100%
+# ---------------------------------------------------
+# TOTAL                              47      0   100%
