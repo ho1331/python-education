@@ -3,9 +3,14 @@ import logging
 import os
 import sys
 
+import texttable
+
 
 class Menu:
+    """class Menu"""
+
     def menu(self):
+        """Show console menu"""
         print("-------------------------------Menu----------------------------------")
         menu = [
             "1.Играть",
@@ -14,39 +19,41 @@ class Menu:
             "4.Выход",
         ]
 
-        for i in menu:
-            print(f"{i}", end="  ")
+        for sub in menu:
+            print(f"{sub}", end="  ")
         print()
 
     def readlog(self):
-        # возвращает файл лог
+        """returne logfile"""
         try:
             with open("xolog.log", "r") as file:
                 lines = file.readlines()
                 for i in lines:
                     print(i)
-        except:
+        except FileNotFoundError:
             print("Not exist")
 
     def dellog(self):
-        # очищает файл лог
+        """delete logfile"""
         if os.path.exists("xolog.log"):
             os.remove("xolog.log")
         else:
             print("Not found")
 
     def exit(self):
-        # exit game
+        """exit game"""
         sys.exit()
 
 
 class Gamer:
+    """class Gamer"""
+
     def __init__(self) -> None:
         self.name1 = input("Введите имя 1-го игрока: ")
         self.name2 = input("Введите имя 2-го игрока: ")
 
     def log_win(self, name):
-        # выводит в файл лог с временем и имем победителя
+        """write logfile of winners"""
         logging.basicConfig(
             format="%(asctime)s - %(message)s", level=logging.INFO, filename="xolog.log"
         )
@@ -55,17 +62,22 @@ class Gamer:
 
 
 class XO:
+    """
+    Class XO
+    It's main class
+    """
+
     def __init__(self) -> None:
         self.place = list(range(9))
-        # input gamers names
+        # create menu
         self.menu = Menu()
 
     def key_event(self):
-        # пользователь вводит цифру, выбираем процесс
+        """check path of menu"""
         event = int(input("Select menu item: "))
         if event == 1:
             self.gamer = Gamer()
-            self.game_proccessing()
+            self.game_processing()
         elif event == 2:
             self.menu.readlog()
         elif event == 3:
@@ -74,28 +86,58 @@ class XO:
             self.menu.exit()
 
     def draw(self):
-        """рисует игровое поле в привычном для человека формате."""
-        for i in range(3):
-            print(self.place[0 + i * 3], self.place[1 + i * 3], self.place[2 + i * 3])
+        """draw gameplace"""
+        table = texttable.Texttable()
+        table.set_cols_align(["c", "c", "c", "c"])
+        table.add_rows(
+            [
+                ["coordinates", "-1-", "-2-", "-3-"],
+                ["a", self.place[0], self.place[1], self.place[2]],
+                ["b", self.place[3], self.place[4], self.place[5]],
+                ["c", self.place[6], self.place[7], self.place[8]],
+            ]
+        )
+        # Display table
+        print(table.draw())
 
     def take_input(self, playertype):
-        """принимает ввод пользователя. Проверяет корректность ввода."""
+        """check input of players"""
         while True:
-            answer = int(input(f"Поставьтe {playertype}:"))
-            if isinstance(answer, int):
-                if answer in range(9):
-                    if str(self.place[answer]) not in "XO":
-                        self.place[answer] = playertype
+            answer = input(f"Поставьтe {playertype}:").lower()
+            coordinates = {
+                "a1": 0,
+                "a2": 1,
+                "a3": 2,
+                "b1": 3,
+                "b2": 4,
+                "b3": 5,
+                "c1": 6,
+                "c2": 7,
+                "c3": 8,
+            }
+            if answer.isdigit():
+                if int(answer) in range(9):
+                    if str(self.place[int(answer)]) not in "XO":
+                        self.place[int(answer)] = playertype
                         break
                     else:
                         print("Занято")
                 else:
-                    print("Некорректный ввод. Введите число от 0 до 8")
+                    print(
+                        "Некорректный ввод. Введите число от 0 до 8 или координату (a1,b3...)"
+                    )
+            # if input is coordinate
+            elif answer in coordinates:
+                self.place[coordinates[answer]] = playertype
+                break
             else:
-                print("Введите цифру!")
+                print(
+                    "Некорректный ввод. Введите число от 0 до 8 или координату (a1,b3...)"
+                )
 
     def check_win(self):
-        """проверяет, выиграл ли игрок"""
+        """check is player win"""
+        # win combinations
         combinates = (
             (0, 1, 2),
             (3, 4, 5),
@@ -106,25 +148,34 @@ class XO:
             (0, 4, 8),
             (2, 4, 6),
         )
+        # if tuple of combinations are same - player will win
         for i in combinates:
             if self.place[i[0]] == self.place[i[1]] == self.place[i[2]]:
                 return self.place[i[0]]
         return False
 
     def newgame(self):
+        """start game"""
         if self.place != list(range(9)):
             choise = input("Сыграть снова? (д/н)  ").lower()
             if choise in ["y", "д"]:
                 self.place = list(range(9))
-                self.game_proccessing()
+                self.game_processing()
             else:
-                self.menu.exit()
+                self.place = list(range(9))
+                self.menu.menu()
         else:
             self.key_event()
-            return True
 
-    def game_proccessing(self):
-        """запускать все ранее описанные функции"""
+    def game_processing(self):
+        """
+        processing of game
+        1. show gameplace
+        2. check whose typing (with take_input func)
+        3. check is player win (with check_win func)
+        4. write logfile of winners (with log_win func)
+        """
+        # number of moves
         counter = 0
         while True:
             self.draw()
@@ -153,8 +204,9 @@ class XO:
                 break
 
 
-#########game##############
+# ------------------GAME------------------------------------
 def main():
+    """running all processing of module"""
     game = XO()
     game.menu.menu()
     while True:
