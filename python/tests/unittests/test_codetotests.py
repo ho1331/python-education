@@ -96,14 +96,4 @@ def test_sell_product(obj_product, zero_product):
     assert shop_obj.money == float(80)
 
 
-# collected 11 items
 
-# unittests/test_codetotests.py ...........                                                                                                                                                     [100%]
-
-# ----------- coverage: platform linux, python 3.8.5-final-0 -----------
-# Name                            Stmts   Miss  Cover
-# ---------------------------------------------------
-# unittests/__init__.py               0      0   100%
-# unittests/test_codetotests.py      47      0   100%
-# ---------------------------------------------------
-# TOTAL                              47      0   100%
