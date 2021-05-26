@@ -37,4 +37,4 @@ if __name__ == "__main__":
     deq = some_eq.dequeue()
     some_eq.printlist()
     print()
-    print(f"Here is old head - '{deq}'")
+    print(f"Here is - '{deq}'")
