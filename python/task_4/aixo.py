@@ -2,7 +2,8 @@
 import logging
 import os
 import sys
-from copy import copy, deepcopy
+
+import texttable
 
 
 class Menu:
@@ -18,8 +19,8 @@ class Menu:
             "4.Выход",
         ]
 
-        for i in menu:
-            print(f"{i}", end="  ")
+        for sub in menu:
+            print(f"{sub}", end="  ")
         print()
 
     def readlog(self):
@@ -29,7 +30,7 @@ class Menu:
                 lines = file.readlines()
                 for i in lines:
                     print(i)
-        except:
+        except FileNotFoundError:
             print("Not exist")
 
     def dellog(self):
@@ -88,24 +89,53 @@ class XO:
 
     def draw(self):
         """draw gameplace"""
-        for i in range(3):
-            print(self.place[0 + i * 3], self.place[1 + i * 3], self.place[2 + i * 3])
+        table = texttable.Texttable()
+        table.set_cols_align(["c", "c", "c", "c"])
+        table.add_rows(
+            [
+                ["coordinates", "-1-", "-2-", "-3-"],
+                ["a", self.place[0], self.place[1], self.place[2]],
+                ["b", self.place[3], self.place[4], self.place[5]],
+                ["c", self.place[6], self.place[7], self.place[8]],
+            ]
+        )
+        # Display table
+        print(table.draw())
 
     def take_input(self, playertype):
         """check input of players"""
         while True:
-            answer = int(input(f"Поставьтe {playertype}:"))
-            if isinstance(answer, int):
-                if answer in range(9):
-                    if str(self.place[answer]) not in "XO":
-                        self.place[answer] = playertype
+            answer = input(f"Поставьтe {playertype}:").lower()
+            coordinates = {
+                "a1": 0,
+                "a2": 1,
+                "a3": 2,
+                "b1": 3,
+                "b2": 4,
+                "b3": 5,
+                "c1": 6,
+                "c2": 7,
+                "c3": 8,
+            }
+            if answer.isdigit():
+                if int(answer) in range(9):
+                    if str(self.place[int(answer)]) not in "XO":
+                        self.place[int(answer)] = playertype
                         break
                     else:
                         print("Занято")
                 else:
-                    print("Некорректный ввод. Введите число от 0 до 8")
+                    print(
+                        "Некорректный ввод. Введите число от 0 до 8 или координату (a1,b3...)"
+                    )
+            # if input is coordinate
+            elif answer in coordinates:
+                self.place[coordinates[answer]] = playertype
+                break
             else:
-                print("Введите цифру!")
+                print(
+                    "Некорректный ввод. Введите число от 0 до 8 или координату (a1,b3...)"
+                )
 
     def check_win(self, place):
         """check is player win"""
@@ -192,10 +222,10 @@ class XO:
                 self.place = list(range(9))
                 self.game_processing()
             else:
-                self.menu.exit()
+                self.place = list(range(9))
+                self.menu.menu()
         else:
             self.key_event()
-            return True
 
     def game_processing(self):
         """
@@ -237,7 +267,7 @@ class XO:
                 break
 
 
-#########game##############
+# ------------------GAME------------------------------------
 def main():
     """running all processing of module"""
     game = XO()
