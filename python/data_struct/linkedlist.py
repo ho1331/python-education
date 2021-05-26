@@ -1,3 +1,4 @@
+"""class Linkedlist"""
 # LinkedList,
 # Queue,
 # Stack,
@@ -23,12 +24,12 @@ class Linkedflist:
 
     def append(self, value):
         """add element to the end"""
-        if self.head == None:
+        if self.head is None:
             self.head = self.Node(value)
             return
         # running by elements to end (if see None - its ends element)
         curent_node = self.head
-        while curent_node.next != None:
+        while curent_node.next is not None:
             curent_node = curent_node.next
 
         curent_node.next = self.Node(value)  # ends element
@@ -73,7 +74,7 @@ class Linkedflist:
         """get index of element by value"""
         curent_node = self.head
         counter = 0
-        while curent_node.next != None:
+        while curent_node.next is not None:
             if element == curent_node.curent:
                 break
             curent_node = curent_node.next
@@ -83,7 +84,7 @@ class Linkedflist:
     def printlist(self):
         """output values of linkedlist"""
         curent_node = self.head
-        while curent_node.next != None:
+        while curent_node.next is not None:
             print(curent_node.curent)
             curent_node = curent_node.next
         print(curent_node.curent)
@@ -126,8 +127,8 @@ print()
 element4 = some_lst.get_element(1)
 print(element4, end="\n\n")
 # get index by value
-index_elem = some_lst.lookup("idx 2")
-print(index_elem, end="\n\n")
+idx_elem = some_lst.lookup("idx 2")
+print(idx_elem, end="\n\n")
 
 # delete elem by index
 some_lst.delete(3)
