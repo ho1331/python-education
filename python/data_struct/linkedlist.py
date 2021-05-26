@@ -110,26 +110,27 @@ class Linkedflist:
         next_node = prev_node.next
 
 
-some_lst = Linkedflist()
-some_lst.append(17)
-some_lst.append(90)
-some_lst.append(4)
-some_lst.append(5)
-some_lst.append("some element")
-some_lst.append(6)
-# insert
-some_lst.insert(2, "idx 2")  # insert with index=2
-some_lst.insert(0, 11)  # prepend (shifts list for one position to the right)
-some_lst.printlist()
-print()
+if __name__ == "__main__":
+    some_lst = Linkedflist()
+    some_lst.append(17)
+    some_lst.append(90)
+    some_lst.append(4)
+    some_lst.append(5)
+    some_lst.append("some element")
+    some_lst.append(6)
+    # insert
+    some_lst.insert(2, "idx 2")  # insert with index=2
+    some_lst.insert(0, 11)  # prepend (shifts list for one position to the right)
+    some_lst.printlist()
+    print()
 
-# get elem by index
-element4 = some_lst.get_element(1)
-print(element4, end="\n\n")
-# get index by value
-idx_elem = some_lst.lookup("idx 2")
-print(idx_elem, end="\n\n")
+    # get elem by index
+    element4 = some_lst.get_element(1)
+    print(element4, end="\n\n")
+    # get index by value
+    idx_elem = some_lst.lookup("idx 2")
+    print(idx_elem, end="\n\n")
 
-# delete elem by index
-some_lst.delete(3)
-some_lst.printlist()
+    # delete elem by index
+    some_lst.delete(3)
+    some_lst.printlist()
