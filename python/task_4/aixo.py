@@ -13,10 +13,11 @@ class Menu:
         """Show console menu"""
         print("-------------------------------Menu----------------------------------")
         menu = [
-            "1.Играть",
-            "2.Просмотреть лог побед",
-            "3.Очистить лог побед",
-            "4.Выход",
+            "1.player & player |",
+            "2.player & AI |",
+            "3.Просмотреть лог побед |",
+            "4.Очистить лог побед |",
+            "5.Выход",
         ]
 
         for sub in menu:
@@ -32,6 +33,7 @@ class Menu:
                     print(i)
         except FileNotFoundError:
             print("Not exist")
+        self.menu()
 
     def dellog(self):
         """delete logfile"""
@@ -39,6 +41,7 @@ class Menu:
             os.remove("xolog.log")
         else:
             print("Not found")
+        self.menu()
 
     def exit(self):
         """exit game"""
@@ -71,20 +74,29 @@ class XO:
         self.place = list(range(9))
         # create menu
         self.menu = Menu()
-        self.AI = "O"
-        self.PLAYER = "X"
+        self.AI = "X"
+        self.PLAYER = "O"
+        self.oponent = None
 
     def key_event(self):
         """check path of menu"""
         event = int(input("Select menu item: "))
         if event == 1:
+            oponent = self.oponent_human
+            self.oponent = oponent
             self.gamer = Gamer()
-            self.game_processing()
-        elif event == 2:
-            self.menu.readlog()
+            self.game_processing(oponent)
+
+        if event == 2:
+            oponent = self.oponent_ai
+            self.oponent = oponent
+            self.gamer = Gamer()
+            self.game_processing(oponent)
         elif event == 3:
-            self.menu.dellog()
+            self.menu.readlog()
         elif event == 4:
+            self.menu.dellog()
+        elif event == 5:
             self.menu.exit()
 
     def draw(self):
@@ -220,14 +232,23 @@ class XO:
             choise = input("Сыграть снова? (д/н)  ").lower()
             if choise in ["y", "д"]:
                 self.place = list(range(9))
-                self.game_processing()
+                self.game_processing(self.oponent)
             else:
                 self.place = list(range(9))
                 self.menu.menu()
         else:
             self.key_event()
 
-    def game_processing(self):
+    def oponent_ai(self):
+        """initiated oponent == ai"""
+        move = self.ai_moving(self.place)
+        self.place[move] = self.AI
+
+    def oponent_human(self):
+        """initiated oponent == humen"""
+        self.take_input("X")
+
+    def game_processing(self, oponent):
         """
         processing of game
         1. show gameplace
@@ -242,8 +263,7 @@ class XO:
             if counter % 2 == 0:
                 print(f"{self.gamer.name2} ходит")
                 ####################
-                move = self.ai_moving(self.place)
-                self.place[move] = self.AI
+                oponent()
                 ####################
             else:
                 print(f"{self.gamer.name1} ходит")
