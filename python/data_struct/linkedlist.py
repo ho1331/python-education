@@ -53,8 +53,12 @@ class Linkedflist:
 
         # running by elements to end (if see None - its ends element)
         while counter < idx:
-            left_node = next_node
-            next_node = next_node.next
+            try:
+                left_node = next_node
+                next_node = next_node.next
+            except Exception:
+                print("Index out of range")
+                return
             counter += 1
 
         left_node.next = insert_node
@@ -65,7 +69,11 @@ class Linkedflist:
         curent_node = self.head
         counter = 0
         while counter < idx:
-            curent_node = curent_node.next
+            try:
+                curent_node = curent_node.next
+            except Exception:
+                print("Index out of range")
+                return
             counter += 1
 
         return curent_node.curent
@@ -77,7 +85,11 @@ class Linkedflist:
         while curent_node.next is not None:
             if element == curent_node.curent:
                 break
-            curent_node = curent_node.next
+            try:
+                curent_node = curent_node.next
+            except Exception:
+                print("Could not found")
+                return
             counter += 1
         return counter
 
@@ -101,8 +113,11 @@ class Linkedflist:
             if del_item == cur_node.curent:
                 break
             prev_node = cur_node
-            cur_node = prev_node.next
-            next_node = cur_node.next
+            try:
+                cur_node = prev_node.next
+                next_node = cur_node.next
+            except Exception:
+                return
             counter += 1
 
         # change ref
@@ -132,5 +147,5 @@ if __name__ == "__main__":
     print(idx_elem, end="\n\n")
 
     # delete elem by index
-    some_lst.delete(3)
+    some_lst.delete(50)
     some_lst.printlist()

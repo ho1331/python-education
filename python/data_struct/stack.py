@@ -11,8 +11,8 @@ class Stack(Queue):
 
     def pop(self):
         """pop last element"""
-        pop = self.dequeue()
-        return pop
+        return self.dequeue()
+
 
     def peek(self):
         curent_node = self.head

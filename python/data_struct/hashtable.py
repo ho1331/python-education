@@ -34,7 +34,7 @@ class Hashtable:
                 sum = sum + ord(key[pos]) * pos
             return sum % (lentab ** 2)
 
-    def add_item(self, key, value):
+    def insert(self, key, value):
         """add element to the end"""
         if self.head is None:
             self.head = Node(key, value)
@@ -50,6 +50,12 @@ class Hashtable:
         curent_node.next.index = self.get_hash(key)
         # print(curent_node.next.index)
 
+    def lookup(self, key):
+        pass
+
+    def delete(self, key):
+        pass
+
     def printlist(self):
         """output values"""
         curent_node = self.head
@@ -59,20 +65,18 @@ class Hashtable:
         print(f"{curent_node.key} : {curent_node.value}")
 
 
-
-
 if __name__ == "__main__":
     hashtable = Hashtable()
-    hashtable.add_item("sd", 17)
-    hashtable.add_item("asda", 90)
-    hashtable.add_item("afsdf", 45)
-    hashtable.add_item("dsfsdf", 9)
-    hashtable.add_item("dsfsdfr", 107)
-    hashtable.add_item("qqqqqqqq", 104)
-    hashtable.add_item("suywe", 1009)
-    hashtable.add_item("inbsgs", 105)
-    hashtable.add_item(7, 105)
-    hashtable.add_item(12, 105)
-    hashtable.add_item(456, 105)
-    hashtable.add_item(4589, 105)
+    hashtable.insert("sd", 17)
+    hashtable.insert("asda", 90)
+    hashtable.insert("afsdf", 45)
+    hashtable.insert("dsfsdf", 9)
+    hashtable.insert("dsfsdfr", 107)
+    hashtable.insert("qqqqqqqq", 104)
+    hashtable.insert("suywe", 1009)
+    hashtable.insert("inbsgs", 105)
+    hashtable.insert(7, 105)
+    hashtable.insert(12, 105)
+    hashtable.insert(456, 105)
+    hashtable.insert(4589, 105)
     hashtable.printlist()
