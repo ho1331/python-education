@@ -24,6 +24,9 @@ class Queue(Linkedflist):
         self.delete(idx)
         return curent_node.curent
 
+    def peek(self):
+        return self.head.curent
+
 
 if __name__ == "__main__":
     some_eq = Queue()
@@ -38,3 +41,5 @@ if __name__ == "__main__":
     some_eq.printlist()
     print()
     print(f"Here is - '{deq}'")
+    last = some_eq.peek()
+    print(f"last elem - '{last}'")

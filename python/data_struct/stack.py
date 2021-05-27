@@ -1,6 +1,4 @@
 """class Stack"""
-# from python.data_struct.linkedlist import Linkedflist
-# from python.data_struct.queue import Queue
 from queues import Queue
 
 
@@ -16,6 +14,13 @@ class Stack(Queue):
         pop = self.dequeue()
         return pop
 
+    def peek(self):
+        curent_node = self.head
+        while curent_node.next is not None:
+            curent_node = curent_node.next
+
+        return curent_node.curent
+
 
 if __name__ == "__main__":
     some_stack = Stack()
@@ -29,3 +34,6 @@ if __name__ == "__main__":
     some_stack.printlist()
     print()
     print(f"Here is- '{pop}'")
+
+    last = some_stack.peek()
+    print(last)
