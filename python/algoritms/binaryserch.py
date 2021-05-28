@@ -9,7 +9,7 @@ def binary_search(lst, item):
     stop = len(lst) - 1
 
     while start <= stop:
-        mid = (start + stop) // 2
+        mid = (start + stop) // 2  # cut list
         guess = lst[mid]
 
         if guess == item:
