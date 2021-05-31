@@ -1,7 +1,9 @@
 def qs(lst):
+    """quick sort funk"""
+
     def reverse(lst, start, end):
         """replace elements arround base"""
-        #choise base
+        # choise base
         base_element = start
         for j in range(start + 1, end + 1):
             if lst[j] < lst[start]:
@@ -23,13 +25,26 @@ def qs(lst):
         start = area.pop()
         base_element = reverse(lst, start, end)
 
+        if start < base_element - 1:
+            area.append(start), area.append(base_element - 1)
 
-        area += {
-            start < base_element - 1: [start, base_element - 1],
-            end > base_element + 1: [base_element + 1, end],
-        }.get(True, area)
+        if end > base_element + 1:
+            area.append(base_element + 1), area.append(end)
 
 
-lst = [7, 11, 1, 2, 6, 5, 4, 3]
-qs(lst)
-print(lst)
+def factorial(n):
+    """fuctorial"""
+    if n == 0:
+        return None
+    if n == 1:
+        return n
+    return factorial(n - 1) * n
+
+
+if __name__ == "__main__":
+
+    lst = [7, 11, 1, 2, 6, 5, 4, 3]
+    qs(lst)
+    print(lst)
+
+    print(factorial(0))

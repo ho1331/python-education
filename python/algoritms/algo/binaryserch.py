@@ -24,12 +24,6 @@ def binary_search(lst, item):
     return f"{item} not in list"
 
 
-some_number = 12
-my_list = sorted(sample(list(range(1, 140)), 50))
-x = binary_search(my_list, some_number)
-print(x)
-
-
 def binary_rec(lst, item, start, stop):
     """recursive vers of BS"""
     if start > stop:
@@ -44,5 +38,11 @@ def binary_rec(lst, item, start, stop):
             return binary_rec(lst, item, start, mid - 1)
 
 
-y = binary_rec(my_list, some_number, 0, len(my_list) - 1)
-print(y)
+if __name__ == "__main__":
+    some_number = 12
+    my_list = sorted(sample(list(range(1, 140)), 50))
+    x = binary_search(my_list, some_number)
+    print(x)
+
+    y = binary_rec(my_list, some_number, 0, len(my_list) - 1)
+    print(y)
