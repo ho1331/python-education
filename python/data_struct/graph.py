@@ -1,7 +1,4 @@
 """class Graph"""
-# import my queue class
-# from python.data_struct.queues import Queue
-from queues import Queue
 
 
 class Node:
@@ -15,10 +12,13 @@ class Node:
 
 
 class Graph:
+    """class Graph"""
+
     def __init__(self) -> None:
         self.head = None
 
     def insert(self, edge, *values):
+        """insert values"""
         if self.head is None:
             self.head = Node(edge, *values)
             for _ in self.head.values:
@@ -34,8 +34,10 @@ class Graph:
             curent_node.next.countvar += 1
 
     def lookup(self, value):
+        """return path to value"""
         edge = self.head
 
+        # create rec func for searh of ways
         def search_path(edg):
             res = []
             edge = edg
@@ -46,25 +48,61 @@ class Graph:
             return res
 
         res = search_path(edge)
-        return res
+
+        if res:
+            return res
+        else:
+            return "Not found"
 
     def output(self):
+        """print curently graph"""
         curent_node = self.head
         while curent_node.next is not None:
             print(f"{curent_node.edge} : {curent_node.values}")
             curent_node = curent_node.next
         print(f"{curent_node.edge} : {curent_node.values}")
 
+    def delete(self, value):
+        """delete edge end relatives"""
+        if self.lookup(value):
+            if isinstance(value, str):
+                value = value.capitalize()
+        else:
+            return "Not found"
+        curent_node = self.head
+        # cut edge
+        while curent_node.next.edge != value:
+            if value in curent_node.values:
+                curent_node.values = tuple(i for i in curent_node.values if i != value)
+
+            curent_node = curent_node.next
+        if value in curent_node.values:
+            curent_node.values = tuple(i for i in curent_node.values if i != value)
+
+        # clear relatives
+        clear = curent_node.next
+        while clear is not None:
+            node = self.head
+            while node.next is not None:
+                node.values = tuple(i for i in node.values if i != clear.edge)
+                node = node.next
+            clear = clear.next
+
+        curent_node.next = None
+
 
 if __name__ == "__main__":
     test = Graph()
-    test.insert("A", "B", "D", "C")
-    test.insert("B", "D", "A")
-    test.insert("C", "A", "D")
+    test.insert("A", "B", "K", "D", "C")
+    test.insert("B", "D", "M", "A")
+    test.insert("C", "A", "O", "D")
     test.insert("D", "C", "A", "B", "F")
     test.insert("F", "K", "D", "M")
     test.insert("K", "F")
     test.insert("M", "F", "O")
     test.insert("O", "M")
     test.output()
-    print(test.lookup("d"))
+    print(test.lookup("d"))  # way to D
+    print()
+    test.delete("k")
+    test.output()
