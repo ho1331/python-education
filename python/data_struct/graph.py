@@ -34,7 +34,19 @@ class Graph:
             curent_node.next.countvar += 1
 
     def lookup(self, value):
-        pass
+        edge = self.head
+
+        def search_path(edg):
+            res = []
+            edge = edg
+            if edge is not None:
+                if value.capitalize() in edge.values:
+                    res.append(edge.edge)
+                res += search_path(edge.next)
+            return res
+
+        res = search_path(edge)
+        return res
 
     def output(self):
         curent_node = self.head
@@ -55,4 +67,4 @@ if __name__ == "__main__":
     test.insert("M", "F", "O")
     test.insert("O", "M")
     test.output()
-    print(test.lookup(2))
+    print(test.lookup("d"))
