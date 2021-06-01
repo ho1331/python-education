@@ -1,39 +1,58 @@
 """class Graph"""
-# from python.data_struct.linkedlist import Linkedflist
+# import my queue class
+# from python.data_struct.queues import Queue
+from queues import Queue
 
-from linkedlist import Linkedflist
+
+class Node:
+    """class Node"""
+
+    def __init__(self, edge, *values) -> None:
+        self.values = values
+        self.countvar = 0
+        self.edge = edge
+        self.next = None
 
 
-class Graph(Linkedflist):
+class Graph:
     def __init__(self) -> None:
-        super().__init__()
-        # Here self.head - children
-        self.edge = None
-        self.count = 0
+        self.head = None
 
     def insert(self, edge, *values):
-        if self.edge is None:
-            self.edge = self.Node(edge)
-        curent_node = self.edge
-        while curent_node.next is not None:
-            curent_node = curent_node.next
-        curent_node.next = self.Node(edge)
+        if self.head is None:
+            self.head = Node(edge, *values)
+            for _ in self.head.values:
+                self.head.countvar += 1
+            return
 
-        # added neighbours
-        for i in values:
-            self.append(i)
-            self.count += 1
-
-    def output(self):
-        print(f"{self.edge.curent} : [", end=" ")
         curent_node = self.head
         while curent_node.next is not None:
-            print(f"{curent_node.curent},", end=" ")
             curent_node = curent_node.next
-        print(f"{curent_node.curent} ]")
+
+        curent_node.next = Node(edge, *values)  # ends element
+        for _ in curent_node.next.values:
+            curent_node.next.countvar += 1
+
+    def lookup(self, value):
+        pass
+
+    def output(self):
+        curent_node = self.head
+        while curent_node.next is not None:
+            print(f"{curent_node.edge} : {curent_node.values}")
+            curent_node = curent_node.next
+        print(f"{curent_node.edge} : {curent_node.values}")
 
 
 if __name__ == "__main__":
     test = Graph()
-    test.insert("A", 2, 3, 1, 4)
+    test.insert("A", "B", "D", "C")
+    test.insert("B", "D", "A")
+    test.insert("C", "A", "D")
+    test.insert("D", "C", "A", "B", "F")
+    test.insert("F", "K", "D", "M")
+    test.insert("K", "F")
+    test.insert("M", "F", "O")
+    test.insert("O", "M")
     test.output()
+    print(test.lookup(2))
