@@ -1,8 +1,9 @@
 from math import factorial as fact
 
 import pytest
-from algo.binaryserch import binary_search
-from algo.quicksort import factorial, qs
+
+from ..algo.binaryserch import binary_search
+from ..algo.quicksort import factorial, qs
 
 
 def test_binary_search():
