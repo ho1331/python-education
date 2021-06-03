@@ -8,12 +8,16 @@ from itertools import chain
 from tkinter import messagebox
 
 
-class Gameplace:
+class Window:
     def __init__(self, height, width) -> None:
         self.height = height
         self.width = width
         self.window = tk.Tk()
-        self.place = []
+        self.text_place = tk.StringVar()
+        self.status = tk.Label(
+            self.window, textvariable=self.text_place, font="Courier 30"
+        )
+        self.status.place(x=20, y=400)
 
     def createplace(self):
         self.window.title("Tic toc toe")
@@ -34,29 +38,59 @@ class Gameplace:
         menu.add_command(label="Очистить лог побед", command=lambda: Menu.dellog(self))
         menu.add_command(label="Выход", command=lambda: Menu.exit(self))
 
+    def show(self):
+        self.window.mainloop()
+
+
+class Gameplace:
+    def __init__(self, height, width) -> None:
+        self.place = []
+        self.process = XO()
+        self.counter = 0
+        self.frame = Window(height, width)
+
     def draw(self):
         for row in range(3):
             line = []
             for col in range(3):
                 button = tk.Button(
-                    self.window,
+                    self.frame.window,
                     text=" ",
                     width=4,
                     height=2,
                     font=("Verdana", 30, "bold"),
                     background="lavender",
-                    command=lambda row=row, col=col: self.event(row, col),
+                    command=lambda row=row, col=col: self.event(self.place, row, col),
                 )
                 button.grid(row=row, column=col, sticky="nsew")
                 line.append(button)
             self.place.append(line)
+            self.update_status()
 
-    def event(self, row, col):
-        if self.place[row][col]["text"] == " ":
-            self.place[row][col]["text"] = "X"
+    def update_status(self):
+        if self.counter % 2 == 0:
+            self.frame.text_place.set("Ходит игрок1")
+        else:
+            self.frame.text_place.set("Ходит игрок2")
 
-    def show(self):
-        self.window.mainloop()
+    def event(self, place, row, col):
+        if self.counter % 2 == 0:
+            if place[row][col]["text"] == " ":
+                place[row][col]["text"] = "X"
+            self.counter += 1
+            self.update_status()
+
+        else:
+            if place[row][col]["text"] == " ":
+                place[row][col]["text"] = "O"
+            self.counter += 1
+            self.update_status()
+
+        if self.counter > 4:
+            if self.process.check_win(self.place):
+                messagebox.showinfo(
+                    "Игра окончена", f"Победил {self.frame.text_place.get()}"
+                )
 
 
 class Menu:
@@ -91,14 +125,17 @@ class XO:
         self.PLAYER = "O"
         self.oponent = None
 
-    def oponent_ai(self):
-        """initiated oponent == ai"""
-        move = self.ai_moving(self.place)
-        self.place[move] = self.AI
-
-    def oponent_human(self):
-        """initiated oponent == humen"""
-        self.take_input("X")
+    def check_win(self, place):
+        """check is player win"""
+        # if tuple of combinations are same - player will win
+        for i in range(3):
+            if place[i][0]["text"] == place[i][1]["text"] == place[i][2]["text"]:
+                return True
+        if place[0][0]["text"] == place[1][1]["text"] == place[2][2]["text"]:
+            return True
+        if place[0][2]["text"] == place[1][1]["text"] == place[2][0]["text"]:
+            return True
+        return False
 
 
 # ------------------------------------------------------------------

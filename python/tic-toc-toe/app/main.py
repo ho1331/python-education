@@ -1,14 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from game import XO, Gameplace, Menu
+import game
 
-window = Gameplace(600, 800)
-window.createplace()
-window.menu()
-menu = Menu()
+window = game.Gameplace(600, 800)
+window.frame.createplace()
+window.frame.menu()
+menu = game.Menu()
 
-
+window.update_status()
 window.draw()
 
 
@@ -18,4 +18,4 @@ window.draw()
 if __name__ == "__main__":
     # ------------------GAME------------------------------------
 
-    window.show()
+    window.frame.show()
