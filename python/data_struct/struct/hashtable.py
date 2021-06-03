@@ -39,14 +39,14 @@ class Hashtable:
     def lookup(self, key):
         """return value by key"""
         curent_node = self.head
-        counter = 0
+
         while curent_node.next is not None:
             if self.get_hash(key) == curent_node.index:
                 return curent_node.value
             curent_node = curent_node.next
-            counter += 1
+
         print(f"Key {key} not found")
-        return
+        return curent_node.value
 
     def delete(self, key):
         """delete element by index"""
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     hashtable.insert(4589, 1)
     hashtable.printdict()
     some_key1, some_key2 = hashtable.lookup("sd1"), hashtable.lookup(7)
-    print(some_key1, some_key2)
+    print(some_key2)
     hashtable.delete("asdakfmwklfmlwkmeflkwmflkwmflk")
     print()
     hashtable.printdict()

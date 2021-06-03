@@ -1,6 +1,6 @@
 """class Queue"""
 
-from linkedlist import Linkedflist
+from ...data_struct.struct.linkedlist import Linkedflist
 
 
 class Queue(Linkedflist):

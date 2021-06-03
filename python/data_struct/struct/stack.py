@@ -1,5 +1,5 @@
 """class Stack"""
-from queues import Queue
+from ...data_struct.struct.queues import Queue
 
 
 class Stack(Queue):
@@ -12,7 +12,6 @@ class Stack(Queue):
     def pop(self):
         """pop last element"""
         return self.dequeue()
-
 
     def peek(self):
         curent_node = self.head

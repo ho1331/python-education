@@ -64,14 +64,14 @@ class Graph:
 
     def delete(self, value):
         """delete edge end relatives"""
-        if self.lookup(value):
+        if not isinstance(self.lookup(value), str):
             if isinstance(value, str):
                 value = value.capitalize()
         else:
             return "Not found"
         curent_node = self.head
         # cut edge
-        while curent_node.next.edge != value:
+        while curent_node.next and curent_node.next.edge != value:
             if value in curent_node.values:
                 curent_node.values = tuple(i for i in curent_node.values if i != value)
 
@@ -99,10 +99,10 @@ if __name__ == "__main__":
     test.insert("D", "C", "A", "B", "F")
     test.insert("F", "K", "D", "M")
     test.insert("K", "F")
-    test.insert("M", "F", "O")
+    test.insert("M", "F", "O", "Q")
     test.insert("O", "M")
     test.output()
     print(test.lookup("d"))  # way to D
     print()
-    test.delete("k")
+    test.delete("f")
     test.output()
