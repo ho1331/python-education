@@ -4,11 +4,6 @@ from ...data_struct.struct.linkedlist import Linkedflist
 
 
 @pytest.fixture
-def ll():
-    return Linkedflist()
-
-
-@pytest.fixture
 def lils():
     h = Linkedflist()
     h.append(24)
