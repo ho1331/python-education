@@ -122,8 +122,10 @@ class Game:
         winner = self.process.check_win(self.place)
         if winner == "X":
             return self.log.log_win(self.name1)
-        else:
+        elif winner == "O":
             return self.log.log_win(self.name2)
+        else:
+            return self.log.log_win("Ничья")
 
     def play_with_ai(self):
         """cgoose game with ai"""

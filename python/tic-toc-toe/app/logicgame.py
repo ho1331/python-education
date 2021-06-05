@@ -132,7 +132,7 @@ class Gameprocesse:
         if winner == self.AI:
             return 10
         if winner == self.PLAYER:
-            return -10
+            return -20
 
         # push score for each index
 
