@@ -96,3 +96,20 @@ WHERE carts_cart_id = cart_id AND order_status_order_status_id=order_status_id A
 SELECT cart_id, users_user_id, subtotal, carts.total, timestamp
 FROM carts JOIN orders ON carts_cart_id = cart_id JOIN order_statuses ON order_status_order_status_id=order_status_id
 WHERE status_name = 'Canceled';
+
+-- Задание 2.4
+-- Вывести:
+-- 1. среднюю сумму всех завершенных сделок
+-- 2. вывести максимальную сумму сделки за 3 квартал 2020
+
+-----1-------
+SELECT AVG(total) average_price
+FROM orders
+    JOIN order_statuses ON orders.order_status_order_status_id = order_statuses.order_status_id
+WHERE order_statuses.status_name = 'Finished';
+
+-----2-------
+SELECT MAX(total) average_price
+FROM orders
+    JOIN order_statuses ON orders.order_status_order_status_id = order_statuses.order_status_id
+WHERE EXTRACT(QUARTER FROM created_at ) = 3 AND date_part('year', created_at) = '2020';	
