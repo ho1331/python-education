@@ -17,11 +17,11 @@ FROM order_statuses;
 -- Вывести заказы, которые успешно доставлены и оплачены
 SELECT order_id, carts_cart_id, order_status_order_status_id, shipping_total, total, updated_at, created_at
 FROM orders, order_statuses
-WHERE order_status_order_status_id =  order_status_id AND status_name IN('Paid','Finished');
+WHERE order_status_order_status_id =  order_status_id AND status_name IN('Finished');
 --or
 SELECT order_id, carts_cart_id, order_status_order_status_id, shipping_total, total, updated_at, created_at
 FROM orders JOIN order_statuses ON orders.order_status_order_status_id = order_statuses.order_status_id
-WHERE status_name IN('Paid','Finished');
+WHERE status_name IN('Finished');
 
 -- Задание 2.3
 -- Вывести:
