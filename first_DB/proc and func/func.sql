@@ -1,11 +1,4 @@
 
-create function set_ship_tot(some_city varchar)
-returns int
-language plpgsql
-as
-$$
-declare
-	user_iden int;
 	order_cart int;
 	ship record;
 begin
@@ -22,7 +15,8 @@ begin
 		end if;
 	end loop;
 
-   return order_cart;
+   return;
 end; $$;
 
 select set_ship_tot('city 2');
+-- drop function set_ship_tot;
