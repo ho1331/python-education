@@ -1,4 +1,11 @@
 
+create function set_ship_tot(some_city varchar)
+returns void
+language plpgsql
+as
+$$
+declare
+	user_iden int;
 	order_cart int;
 	ship record;
 begin
@@ -19,4 +26,3 @@ begin
 end; $$;
 
 select set_ship_tot('city 2');
--- drop function set_ship_tot;
