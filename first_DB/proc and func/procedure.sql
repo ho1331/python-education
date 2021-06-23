@@ -2,20 +2,20 @@ create procedure update_with_time(status int)
 	language plpgsql
 	as $$
 	declare
-		dif_timestamp int;
-		now int := date_part('day', now());
-		some_day int;
+		dif_timestamp text := 
+			'select * 
+			from orders 
+			where order_status_id = $1
+			AND (date_part(''day'', now()) - date_part(''day'', updated_at)) >2';
+			
+		s_data record;
 	begin
-		for some_day in (select date_part('day', updated_at) from orders where order_status_id = status) loop
-			dif_timestamp  := now - some_day;
-			CASE 
-				WHEN dif_timestamp <= 2 THEN continue;
-				WHEN dif_timestamp > 2 THEN
-					update orders set shipping_total = 120 
-					where order_status_id = status;
-					commit;
-			END CASE;
-		end loop;
+		execute dif_timestamp into s_data using status;
+		if s_data is not NULL then
+			update orders set shipping_total = 120 
+			where order_status_id = status;
+			commit;
+		end if;
 
 	end;$$;
 
